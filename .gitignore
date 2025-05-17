@@ -1,0 +1,4 @@
+# Ignore data files and checkpoints
+data/
+*.csv
+.ipynb_checkpoints/
