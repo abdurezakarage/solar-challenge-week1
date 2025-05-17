@@ -5,10 +5,12 @@ This project analyzes solar energy production data to identify high potential su
 ### Prerequisites
 - Python 3.10+
 - Git
+- 
 1. Clone the repository:
 ```bash
 git clone https://github.com/yourusername/solar-challenge-week1.git
 cd solar-challenge-week1
+
 2. Create and activate the virtual environment:
 ```bash
 # Windows
@@ -23,15 +25,14 @@ source SolarChallenge/Scripts/activate  # Git Bash
 pip install -r requirements.txt
 
 ## Dependencies
-
 - pandas
 - numpy
 - matplotlib
 - seaborn
 - scikit-learn
 - jupyter
-## Contributing
 
+## Contributing
 1. Create a new branch:
 ```bash
 git checkout -b feature-name
