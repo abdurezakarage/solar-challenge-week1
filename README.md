@@ -33,6 +33,7 @@ pip install -r requirements.txt
 - jupyter
 
 ## Contributing
+
 1. Create a new branch:
 ```bash
 git checkout -b feature-name
