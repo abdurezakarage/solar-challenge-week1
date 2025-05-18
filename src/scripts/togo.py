@@ -285,8 +285,8 @@ print(f"ModB Std Dev: {((std_modb_after - std_modb_before) / std_modb_before * 1
 
 # 1. Correlation Heatmap
 print("\nCalculating correlations between key variables...")
-correlation_cols = ['GHI', 'DNI', 'DHI', 'TModA', 'TModB', 'Tamb', 'WS', 'WSgust', 'WD', 'RH']
-correlation_matrix = df_benin_clean[correlation_cols].corr()
+correlation_cols = ['GHI', 'DNI', 'DHI', 'TModA', 'TModB']
+correlation_matrix = df_togo_clean[correlation_cols].corr()
 
 # Make sure matplotlib is in interactive mode
 plt.ion()
