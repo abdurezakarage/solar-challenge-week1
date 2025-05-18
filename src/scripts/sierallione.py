@@ -281,26 +281,23 @@ print(f"ModB Mean: {((mean_modb_after - mean_modb_before) / mean_modb_before * 1
 print(f"ModB Std Dev: {((std_modb_after - std_modb_before) / std_modb_before * 100):.2f}%")
 
 # Correlation 
-
-
-# 1. Correlation Heatmap
+ #1. Correlation Heatmap
 print("\nCalculating correlations between key variables...")
-correlation_cols = ['GHI', 'DNI', 'DHI', 'TModA', 'TModB', 'Tamb', 'WS', 'WSgust', 'WD', 'RH']
-correlation_matrix = df_benin_clean[correlation_cols].corr()
+correlation_cols = ['GHI', 'DNI', 'DHI', 'TModA', 'TModB']
+correlation_matrix = df_soeraleone_clean[correlation_cols].corr()
 
-# Make sure matplotlib is in interactive mode
-plt.ion()
+# Turn off interactive mode for more reliable display
+plt.ioff()
 
-# Display the correlation matrix
-plt.figure(figsize=(12, 10))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
+# Create the figure and plot
+fig, ax = plt.subplots(figsize=(12, 10))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5, ax=ax)
 plt.title('Correlation Heatmap of Key Variables')
 plt.tight_layout()
-plt.show()
 
-# Add a pause to keep the plot visible
-plt.pause(0.1)
-input("Press Enter to continue...")
+# Force the plot to render and display - using block=True ensures it appears
+print("Displaying correlation heatmap. Close the figure window to continue...")
+plt.show(block=True)
 
 # 2. Scatter plots for wind vs. solar irradiance
 plt.figure(figsize=(18, 6))
@@ -358,6 +355,10 @@ plt.show()
 # 1. Wind Rose Plot (using a polar histogram)
 print("\nAnalyzing wind patterns...")
 
+# Turn off interactive mode
+plt.ioff()
+
+# Create figure for wind rose
 plt.figure(figsize=(10, 10))
 ax = plt.subplot(111, projection='polar')
 
@@ -401,7 +402,19 @@ ax.set_thetagrids(
 plt.title('Wind Rose - Speed and Direction Distribution', y=1.1)
 plt.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
 plt.tight_layout()
-plt.show()
+
+# Create output directory if it doesn't exist
+if not os.path.exists('output'):
+    os.makedirs('output')
+
+# Save the wind rose plot
+wind_rose_file = 'output/wind_rose.png'
+plt.savefig(wind_rose_file, dpi=300, bbox_inches='tight')
+print(f"Wind rose plot saved to {wind_rose_file}")
+
+# Display the wind rose plot
+print("Displaying wind rose plot. Close the figure window to continue...")
+plt.show(block=True)
 
 # 2. Distribution Histograms
 plt.figure(figsize=(14, 6))
@@ -429,7 +442,15 @@ plt.ylabel('Frequency')
 plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.show()
+
+# Save the distribution histograms
+hist_file = 'output/wind_ghi_histograms.png'
+plt.savefig(hist_file, dpi=300, bbox_inches='tight')
+print(f"Distribution histograms saved to {hist_file}")
+
+# Display the distribution histograms
+print("Displaying distribution histograms. Close the figure window to continue...")
+plt.show(block=True)
 
 # 3. Joint Distribution of GHI and Wind Speed
 plt.figure(figsize=(10, 8))
