@@ -282,10 +282,14 @@ print(f"ModB Std Dev: {((std_modb_after - std_modb_before) / std_modb_before * 1
 
 # Correlation 
 
+
 # 1. Correlation Heatmap
 print("\nCalculating correlations between key variables...")
 correlation_cols = ['GHI', 'DNI', 'DHI', 'TModA', 'TModB', 'Tamb', 'WS', 'WSgust', 'WD', 'RH']
-correlation_matrix = df_togo_clean[correlation_cols].corr()
+correlation_matrix = df_benin_clean[correlation_cols].corr()
+
+# Make sure matplotlib is in interactive mode
+plt.ion()
 
 # Display the correlation matrix
 plt.figure(figsize=(12, 10))
@@ -294,6 +298,9 @@ plt.title('Correlation Heatmap of Key Variables')
 plt.tight_layout()
 plt.show()
 
+# Add a pause to keep the plot visible
+plt.pause(0.1)
+input("Press Enter to continue...")
 # 2. Scatter plots for wind vs. solar irradiance
 plt.figure(figsize=(18, 6))
 
@@ -345,36 +352,7 @@ plt.grid(True)
 
 plt.tight_layout()
 plt.show()
-
-# 4. Module Temperature vs Solar Irradiance
-plt.figure(figsize=(14, 6))
-
-# GHI vs TModA
-plt.subplot(1, 2, 1)
-plt.scatter(df_togo_clean['GHI'], df_togo_clean['TModA'], alpha=0.5, color='darkred')
-z = np.polyfit(df_togo_clean['GHI'], df_togo_clean['TModA'], 1)
-p = np.poly1d(z)
-plt.plot(df_togo_clean['GHI'], p(df_togo_clean['GHI']), "r--", alpha=0.8)
-plt.title(f'GHI vs. TModA (r = {np.corrcoef(df_togo_clean["GHI"], df_togo_clean["TModA"])[0,1]:.2f})')
-plt.xlabel('GHI (W/m²)')
-plt.ylabel('Module A Temperature (°C)')
-plt.grid(True)
-
-# GHI vs TModB
-plt.subplot(1, 2, 2)
-plt.scatter(df_togo_clean['GHI'], df_togo_clean['TModB'], alpha=0.5, color='darkblue')
-z = np.polyfit(df_togo_clean['GHI'], df_togo_clean['TModB'], 1)
-p = np.poly1d(z)
-plt.plot(df_togo_clean['GHI'], p(df_togo_clean['GHI']), "b--", alpha=0.8)
-plt.title(f'GHI vs. TModB (r = {np.corrcoef(df_togo_clean["GHI"], df_togo_clean["TModB"])[0,1]:.2f})')
-plt.xlabel('GHI (W/m²)')
-plt.ylabel('Module B Temperature (°C)')
-plt.grid(True)
-
-plt.tight_layout()
-plt.show()
 # Wind & Distribution Analysis
-
 # 1. Wind Rose Plot (using a polar histogram)
 print("\nAnalyzing wind patterns...")
 
