@@ -1,10 +1,22 @@
 import pandas as pd
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from scipy.stats import zscore
 import os
+
+# Configure matplotlib for better display of plots
+matplotlib.use('TkAgg')  # Use TkAgg backend which is more reliable for showing plots
+matplotlib.rcParams['figure.figsize'] = (10, 6)  # Default figure size
+matplotlib.rcParams['font.size'] = 12  # Default font size
+plt.ion()  # Turn on interactive mode
+plt.rcParams['figure.max_open_warning'] = 50  # Allow more figures
+
+# Print backend info for debugging
+print(f"Using matplotlib backend: {matplotlib.get_backend()}")
+
 if __name__ == "__main__":
    
     df_benin = pd.read_csv("data/benin-malanville.csv")
@@ -193,8 +205,9 @@ plt.xticks(range(12), ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', '
 plt.grid(True, axis='y')
 plt.tight_layout()
 #plt.show()
-# Cleaning impact
 
+
+# Cleaning impact
 # Create a DataFrame to compare pre and post cleaning values
 print("\nAnalyzing cleaning impact on module values...")
 
@@ -218,7 +231,7 @@ print(module_stats)
 # Create visualization for ModA and ModB before and after cleaning
 plt.figure(figsize=(14, 10))
 
-# Plot ModA comparison - change to bar graph
+# Plot ModA comparison
 plt.subplot(2, 2, 1)
 module_means = combined_df.groupby('Cleaning')['ModA'].mean()
 module_means.plot(kind='bar', ax=plt.gca(), color=['skyblue', 'lightgreen'])
@@ -227,7 +240,7 @@ plt.ylabel('ModA Mean (W/m²)')
 plt.grid(True, axis='y')
 plt.xticks(rotation=0)
 
-# Plot ModB comparison - change to bar graph
+# Plot ModB comparison
 plt.subplot(2, 2, 2)
 module_means = combined_df.groupby('Cleaning')['ModB'].mean()
 module_means.plot(kind='bar', ax=plt.gca(), color=['skyblue', 'lightgreen'])
@@ -287,6 +300,9 @@ print("\nCalculating correlations between key variables...")
 correlation_cols = ['GHI', 'DNI', 'DHI', 'TModA', 'TModB', 'Tamb', 'WS', 'WSgust', 'WD', 'RH']
 correlation_matrix = df_benin_clean[correlation_cols].corr()
 
+# Make sure matplotlib is in interactive mode
+plt.ion()
+
 # Display the correlation matrix
 plt.figure(figsize=(12, 10))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
@@ -294,84 +310,86 @@ plt.title('Correlation Heatmap of Key Variables')
 plt.tight_layout()
 plt.show()
 
+# Add a pause to keep the plot visible
+plt.pause(0.1)
+input("Press Enter to continue...")
+
 # 2. Scatter plots for wind vs. solar irradiance
 plt.figure(figsize=(18, 6))
 
-# Wind Speed vs GHI
+# Wind Speed vs GHI - simple scatter
 plt.subplot(1, 3, 1)
-plt.scatter(df_benin_clean['WS'], df_benin_clean['GHI'], alpha=0.5, color='blue')
+plt.scatter(df_benin_clean['WS'], df_benin_clean['GHI'], 
+           s=50,  # Larger point size for visibility
+           alpha=0.8,  # More opaque
+           color='blue',
+           marker='o')  # Circle marker
 plt.title('Wind Speed vs. GHI')
 plt.xlabel('Wind Speed (m/s)')
 plt.ylabel('GHI (W/m²)')
 plt.grid(True)
 
-# Wind Gust vs GHI
+# Wind Gust vs GHI - simple scatter
 plt.subplot(1, 3, 2)
-plt.scatter(df_benin_clean['WSgust'], df_benin_clean['GHI'], alpha=0.5, color='green')
+plt.scatter(df_benin_clean['WSgust'], df_benin_clean['GHI'], 
+           s=50,  # Larger point size for visibility
+           alpha=0.8,  # More opaque
+           color='green',
+           marker='o')  # Circle marker
 plt.title('Wind Gust vs. GHI')
 plt.xlabel('Wind Gust (m/s)')
 plt.ylabel('GHI (W/m²)')
 plt.grid(True)
 
-# Wind Direction vs GHI
+# Wind Direction vs GHI - simple scatter
 plt.subplot(1, 3, 3)
-plt.scatter(df_benin_clean['WD'], df_benin_clean['GHI'], alpha=0.5, color='purple')
+plt.scatter(df_benin_clean['WD'], df_benin_clean['GHI'], 
+           s=50,  # Larger point size for visibility
+           alpha=0.8,  # More opaque
+           color='purple',
+           marker='o')  # Circle marker
 plt.title('Wind Direction vs. GHI')
 plt.xlabel('Wind Direction (degrees)')
 plt.ylabel('GHI (W/m²)')
 plt.grid(True)
 
 plt.tight_layout()
+plt.draw()  # Draw the plot
+plt.pause(0.1)  # Add a small pause to ensure it renders
+input("Press Enter to continue to the next plot...")  # Wait for user input
 plt.show()
 
 # 3. Scatter plots for humidity vs. temperature and irradiance
 plt.figure(figsize=(12, 6))
 
-# RH vs Tamb
+# RH vs Tamb - simple scatter
 plt.subplot(1, 2, 1)
-plt.scatter(df_benin_clean['RH'], df_benin_clean['Tamb'], alpha=0.5, color='red')
+plt.scatter(df_benin_clean['RH'], df_benin_clean['Tamb'], 
+           s=50,  # Larger point size for visibility
+           alpha=0.8,  # More opaque
+           color='red',
+           marker='o')  # Circle marker
 plt.title('Relative Humidity vs. Ambient Temperature')
 plt.xlabel('Relative Humidity (%)')
 plt.ylabel('Ambient Temperature (°C)')
 plt.grid(True)
 
-# RH vs GHI
+# RH vs GHI - simple scatter
 plt.subplot(1, 2, 2)
-plt.scatter(df_benin_clean['RH'], df_benin_clean['GHI'], alpha=0.5, color='orange')
+plt.scatter(df_benin_clean['RH'], df_benin_clean['GHI'], 
+           s=50,  # Larger point size for visibility
+           alpha=0.8,  # More opaque
+           color='orange',
+           marker='o')  # Circle marker
 plt.title('Relative Humidity vs. GHI')
 plt.xlabel('Relative Humidity (%)')
 plt.ylabel('GHI (W/m²)')
 plt.grid(True)
 
 plt.tight_layout()
-plt.show()
-
-# 4. Module Temperature vs Solar Irradiance
-plt.figure(figsize=(14, 6))
-
-# GHI vs TModA
-plt.subplot(1, 2, 1)
-plt.scatter(df_benin_clean['GHI'], df_benin_clean['TModA'], alpha=0.5, color='darkred')
-z = np.polyfit(df_benin_clean['GHI'], df_benin_clean['TModA'], 1)
-p = np.poly1d(z)
-plt.plot(df_benin_clean['GHI'], p(df_benin_clean['GHI']), "r--", alpha=0.8)
-plt.title(f'GHI vs. TModA (r = {np.corrcoef(df_benin_clean["GHI"], df_benin_clean["TModA"])[0,1]:.2f})')
-plt.xlabel('GHI (W/m²)')
-plt.ylabel('Module A Temperature (°C)')
-plt.grid(True)
-
-# GHI vs TModB
-plt.subplot(1, 2, 2)
-plt.scatter(df_benin_clean['GHI'], df_benin_clean['TModB'], alpha=0.5, color='darkblue')
-z = np.polyfit(df_benin_clean['GHI'], df_benin_clean['TModB'], 1)
-p = np.poly1d(z)
-plt.plot(df_benin_clean['GHI'], p(df_benin_clean['GHI']), "b--", alpha=0.8)
-plt.title(f'GHI vs. TModB (r = {np.corrcoef(df_benin_clean["GHI"], df_benin_clean["TModB"])[0,1]:.2f})')
-plt.xlabel('GHI (W/m²)')
-plt.ylabel('Module B Temperature (°C)')
-plt.grid(True)
-
-plt.tight_layout()
+plt.draw()  # Draw the plot
+plt.pause(0.1)  # Add a small pause to ensure it renders
+input("Press Enter to continue to the next plot...")  # Wait for user input
 plt.show()
 # Wind & Distribution Analysis
 
@@ -421,6 +439,9 @@ ax.set_thetagrids(
 plt.title('Wind Rose - Speed and Direction Distribution', y=1.1)
 plt.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
 plt.tight_layout()
+plt.draw()  # Draw the plot
+plt.pause(0.1)  # Add a small pause to ensure it renders
+input("Press Enter to continue to the next plot...")  # Wait for user input
 plt.show()
 
 # 2. Distribution Histograms
@@ -428,39 +449,110 @@ plt.figure(figsize=(14, 6))
 
 # GHI Distribution
 plt.subplot(1, 2, 1)
-plt.hist(df_benin_clean['GHI'], bins=30, color='orange', edgecolor='black', alpha=0.7)
+n, bins, patches = plt.hist(df_benin_clean['GHI'], bins=30, color='orange', 
+                           edgecolor='black', alpha=0.7, linewidth=1.2)
 plt.axvline(df_benin_clean['GHI'].mean(), color='red', linestyle='dashed', linewidth=2)
-plt.text(df_benin_clean['GHI'].mean()*1.1, plt.ylim()[1]*0.9, 
-         f'Mean: {df_benin_clean["GHI"].mean():.1f}', color='red')
-plt.title('Distribution of GHI')
-plt.xlabel('GHI (W/m²)')
-plt.ylabel('Frequency')
+mean_height = max(n) * 0.9
+plt.text(df_benin_clean['GHI'].mean()*1.1, mean_height, 
+         f'Mean: {df_benin_clean["GHI"].mean():.1f}', color='red', fontsize=12, fontweight='bold')
+plt.title('Distribution of GHI', fontsize=14, fontweight='bold')
+plt.xlabel('GHI (W/m²)', fontsize=12)
+plt.ylabel('Frequency', fontsize=12)
 plt.grid(True, alpha=0.3)
 
 # Wind Speed Distribution
 plt.subplot(1, 2, 2)
-plt.hist(df_benin_clean['WS'], bins=20, color='skyblue', edgecolor='black', alpha=0.7)
+n, bins, patches = plt.hist(df_benin_clean['WS'], bins=20, color='skyblue', 
+                           edgecolor='black', alpha=0.7, linewidth=1.2)
 plt.axvline(df_benin_clean['WS'].mean(), color='blue', linestyle='dashed', linewidth=2)
-plt.text(df_benin_clean['WS'].mean()*1.1, plt.ylim()[1]*0.9, 
-         f'Mean: {df_benin_clean["WS"].mean():.1f}', color='blue')
-plt.title('Distribution of Wind Speed')
-plt.xlabel('Wind Speed (m/s)')
-plt.ylabel('Frequency')
+mean_height = max(n) * 0.9
+plt.text(df_benin_clean['WS'].mean()*1.1, mean_height, 
+         f'Mean: {df_benin_clean["WS"].mean():.1f}', color='blue', fontsize=12, fontweight='bold')
+plt.title('Distribution of Wind Speed', fontsize=14, fontweight='bold')
+plt.xlabel('Wind Speed (m/s)', fontsize=12)
+plt.ylabel('Frequency', fontsize=12)
 plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
+plt.draw()  # Draw the plot
+plt.pause(0.1)  # Add a small pause to ensure it renders
+input("Press Enter to continue to the next plot...")  # Wait for user input
 plt.show()
 
 # 3. Joint Distribution of GHI and Wind Speed
-plt.figure(figsize=(10, 8))
-sns.jointplot(
-    x='WS', y='GHI', data=df_benin_clean, 
-    kind='hex', height=8, cmap='viridis',
-    marginal_kws=dict(bins=20, fill=True)
-)
+print("\nCreating joint distribution plot...")
+plt.figure(figsize=(14, 10))
+
+# Create a simpler version by making two linked subplots
+# First create a scatter plot
+plt.subplot(2, 2, (1, 3))  # Span the left column
+plt.scatter(df_benin_clean['WS'], df_benin_clean['GHI'], 
+           alpha=0.7, c='teal', s=40, edgecolor='darkblue', linewidth=0.5)
+plt.title('Joint Distribution: Wind Speed and GHI', fontsize=14, fontweight='bold')
+plt.xlabel('Wind Speed (m/s)', fontsize=12)
+plt.ylabel('GHI (W/m²)', fontsize=12)
+plt.grid(True, alpha=0.3)
+
+
+# Top histogram - Wind Speed
+plt.subplot(2, 2, 2)
+plt.hist(df_benin_clean['WS'], bins=20, color='teal', edgecolor='darkblue', alpha=0.7)
+plt.title('Wind Speed Distribution', fontsize=12)
+plt.xlabel('Wind Speed (m/s)', fontsize=10)
+plt.grid(True, alpha=0.3)
+
+# Right histogram - GHI
+plt.subplot(2, 2, 4)
+plt.hist(df_benin_clean['GHI'], bins=30, color='teal', edgecolor='darkblue', alpha=0.7, orientation='horizontal')
+plt.title('GHI Distribution', fontsize=12)
+plt.ylabel('GHI (W/m²)', fontsize=10)
+plt.grid(True, alpha=0.3)
+
 plt.tight_layout()
-plt.subplots_adjust(top=0.95)
-plt.suptitle('Joint Distribution of Wind Speed and GHI', fontsize=14)
+plt.draw()  # Draw the plot
+plt.pause(0.1)  # Add a small pause to ensure it renders
+input("Press Enter to continue to the next plot...")  # Wait for user input
+plt.show()
+
+# Standalone Wind Speed Distribution Histogram
+print("\nCreating detailed Wind Speed distribution histogram...")
+plt.figure(figsize=(12, 8))
+
+# Create a more detailed wind speed histogram
+n, bins, patches = plt.hist(df_benin_clean['WS'], bins=25, color='royalblue', 
+                           edgecolor='navy', alpha=0.8, linewidth=1.5)
+
+# Add mean and median lines
+plt.axvline(df_benin_clean['WS'].mean(), color='red', linestyle='dashed', linewidth=2.5, label=f'Mean: {df_benin_clean["WS"].mean():.2f} m/s')
+plt.axvline(df_benin_clean['WS'].median(), color='green', linestyle='dotted', linewidth=2.5, label=f'Median: {df_benin_clean["WS"].median():.2f} m/s')
+
+# Add a kernel density estimate
+density = stats.gaussian_kde(df_benin_clean['WS'])
+x_vals = np.linspace(df_benin_clean['WS'].min(), df_benin_clean['WS'].max(), 200)
+plt.plot(x_vals, density(x_vals) * len(df_benin_clean) * (bins[1] - bins[0]), 
+         'k-', linewidth=2, label='Density Curve')
+
+# Add statistics as a text box
+props = dict(boxstyle='round', facecolor='white', alpha=0.7)
+stat_text = (f"Count: {len(df_benin_clean)}\n"
+             f"Mean: {df_benin_clean['WS'].mean():.2f} m/s\n"
+             f"Median: {df_benin_clean['WS'].median():.2f} m/s\n"
+             f"Std Dev: {df_benin_clean['WS'].std():.2f} m/s\n"
+             f"Min: {df_benin_clean['WS'].min():.2f} m/s\n"
+             f"Max: {df_benin_clean['WS'].max():.2f} m/s")
+plt.text(0.75, 0.80, stat_text, transform=plt.gca().transAxes, 
+         fontsize=12, verticalalignment='top', bbox=props)
+
+plt.title('Detailed Wind Speed Distribution', fontsize=16, fontweight='bold')
+plt.xlabel('Wind Speed (m/s)', fontsize=14)
+plt.ylabel('Frequency', fontsize=14)
+plt.grid(True, alpha=0.3)
+plt.legend()
+
+plt.tight_layout()
+plt.draw()
+plt.pause(0.1)
+input("Press Enter to continue to the next plot...")
 plt.show()
 
 # Temperature Analysis
@@ -634,3 +726,48 @@ plt.plot(x_range, p(x_range), "r--", alpha=0.8)
 
 plt.tight_layout()
 plt.show()
+
+# Add this at the very end of the file, after all other code
+def show_wind_histogram():
+    """Function to display just the wind histogram as a basic plot"""
+    # Turn off interactive mode for this function
+    plt.ioff()
+    
+    # Create a new figure with a simple histogram
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111)
+    
+    # Create the histogram with basic styling
+    counts, bins, patches = ax.hist(df_benin_clean['WS'].dropna(), 
+                                   bins=20, 
+                                   color='navy', 
+                                   edgecolor='white')
+    
+    # Add title and labels
+    ax.set_title('Wind Speed Distribution Histogram', fontsize=16)
+    ax.set_xlabel('Wind Speed (m/s)', fontsize=14)
+    ax.set_ylabel('Frequency', fontsize=14)
+    
+    # Add mean line
+    mean_ws = df_benin_clean['WS'].mean()
+    ax.axvline(mean_ws, color='red', linestyle='dashed', linewidth=2, 
+              label=f'Mean: {mean_ws:.2f} m/s')
+    ax.legend()
+    
+    # Force drawing and show with block=True to ensure it displays
+    plt.tight_layout()
+    fig.canvas.draw()
+    # Save the figure as an image file
+    try:
+        print("Saving wind histogram as image...")
+        plt.savefig('wind_speed_histogram.png')
+        print(f"Saved to {os.path.abspath('wind_speed_histogram.png')}")
+    except Exception as e:
+        print(f"Error saving figure: {e}")
+        
+    # Show the plot, blocking until window is closed
+    print("Displaying Wind Speed Histogram. Close the plot window to continue.")
+    plt.show(block=True)
+
+# Call the function after all other plots
+show_wind_histogram()
