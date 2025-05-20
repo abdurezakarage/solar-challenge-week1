@@ -46,3 +46,13 @@ git commit -m "Description of changes"
 ```bash
 git push origin feature-name
 ```
+Solar Energy Analysis Dashboard
+This project provides an interactive dashboard for analyzing solar energy data using Streamlit. The dashboard offers various visualization and analysis tools to help understand solar energy patterns and trends.
+
+## Features
+
+- Interactive data visualization
+- Time series analysis
+- Statistical analysis
+- Data filtering and exploration
+- Export capabilities
